@@ -1,1 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mohammd AL-Boush</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+.chat-container {
+  background-color: gray;
+  max-width: 90vw;
+  margin: 0 auto;
+  padding: 5vh;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.chat-header h1 {
+  text-align: center;
+}
+
+.message {
+  border-radius: 20px;
+  padding: 2vh;
+  margin-bottom: 2vh;
+  line-height: 1.2;
+}
+
+.left-message p {
+  background-color: blue;
+  color: black;
+  border-radius: 10px;
+  padding: 10px;
+  display: inline-block;
+}
+
+.right-message p {
+  background-color: white;
+  color: black;
+  border-radius: 10px;
+  padding: 10px;
+  display: inline-block;
+}
+
+.left-message {
+  text-align: right;
+}
+
+.right-message {
+  text-align: left;
+}
+
+.chat-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2vh;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 1vh;
+  border-radius: 5px;
+  border: none;
+  margin-right: 1vw;
+}
+
+.chat-input button {
+  padding: 1vh 2vw;
+  border-radius: 5px;
+  border: none;
+  background-color: blue;
+  color: white;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="chat-container">
+  <div class="chat-header">
+   <h1>مترجم</h1>
+  </div>
+  <div class="chat-box">
+   <div class="message left-message">
+    <p>مرحبا! كيف يمكنني مساعدتك</p>
+   </div>
+   <div class="message right-message">
+    <p>Hello, how can I help you?</p>
+   </div>
+  </div>
+  <div class="chat-input">
+   <input type="text" placeholder="Type your message here...">
+   <button>Send</button>
+  </div>
+</div>
+<script>
+  const input = document.querySelector("input");
+  const button = document.querySelector("button");
+  const chatBox = document.querySelector(".chat-box");
+  const url = "https://translation.googleapis.com/language/translate/v2";
+  const apiKey = "My Project 2729";
+  const target = "en"; // The target language for translation
+  const source = "ar"; // The source language for translation
+
+  button.addEventListener("click", () => {
+    const message = input.value;
+    if (message !== "") {
+      const leftMessage = document.createElement("div");
+      leftMessage.classList.add("message", "left-message");
+      leftMessage.innerHTML = `<p>${message}</p>`;
+      chatBox.appendChild(leftMessage);
+      input.value = "";
+      translateMessage(message);
+    }
+  });
+
+  function translateMessage(message) {
+    const q = message;
+    const params = `?key=${apiKey}&q=${q}&source=${source}&target=${target}`;
+
+    fetch(url + params)
+      .then(response => response.json())
+      .then(data => {
+        const translatedMessage = data.data.translations[0].translatedText;
+        const rightMessage = document.createElement("div");
+        rightMessage.classList.add("message", "right-message");
+        rightMessage.innerHTML = `<p>${translatedMessage}</p>`;
+        chatBox.appendChild(rightMessage);
+      })
+      .catch(error => console.log(error));
+  }
+</script>
+</body>
 
